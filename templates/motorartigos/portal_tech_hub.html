@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevStats Hub - Django, Estatística, Data Science & IA</title>
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans para tipografia ultra moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons para ícones modernos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            darkBg: '#050514',
+                            cardBg: 'rgba(13, 17, 43, 0.7)',
+                            borderGlow: 'rgba(99, 102, 241, 0.15)',
+                            githubGreen: '#238636',
+                            githubGreenHover: '#2ea043',
+                            accentPurple: '#a855f7',
+                            accentCyan: '#06b6d4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos e Animações Customizadas */
+        body {
+            background-color: #04040f;
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 10% 30%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Feixe de luz brilhante na parte inferior similar à imagem */
+        .bottom-light-beam {
+            background: radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.35) 0%, rgba(168, 85, 247, 0.15) 30%, rgba(4, 4, 15, 0) 70%);
+        }
+
+        /* Efeito de Vidro (Glassmorphism) */
+        .glass-panel {
+            background: rgba(10, 10, 26, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Efeitos de Animação de Flutuação com variações para naturalidade */
+        @keyframes float-purple-bot {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes float-cat-sphere {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-18px) rotate(-3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes float-duck {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(4deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .animate-float-bot {
+            animation: float-purple-bot 6s ease-in-out infinite;
+        }
+        .animate-float-cat {
+            animation: float-cat-sphere 7s ease-in-out infinite;
+        }
+        .animate-float-duck {
+            animation: float-duck 5.5s ease-in-out infinite;
+        }
+
+        /* Brilho neon sutil nos personagens */
+        .neon-glow-purple {
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.45));
+        }
+        .neon-glow-pink {
+            filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.4));
+        }
+        .neon-glow-yellow {
+            filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.35));
+        }
+
+        /* Transições suaves */
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-100 font-sans overflow-x-hidden min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-white/5 px-4 lg:px-8 py-4 transition-all-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-all-300">
+                    <i data-lucide="terminal" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">DevStats</span>
+                    <span class="text-xs block text-purple-400 font-semibold tracking-wider uppercase">Hub de Artigos</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#artigos" class="hover:text-white transition-all-300 flex items-center gap-1.5"><i data-lucide="book-open" class="w-4 h-4"></i> Artigos</a>
+                <a href="#topicos" class="hover:text-white transition-all-300 flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4"></i> Tópicos</a>
+                <a href="#sobre" class="hover:text-white transition-all-300 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4"></i> Sobre</a>
+            </nav>
+
+            <!-- CTA Header Button -->
+            <div class="flex items-center gap-4">
+                <a href="#newsletter" class="hidden sm:inline-flex text-xs font-semibold text-slate-300 hover:text-white transition-colors">Assinar News</a>
+                <a href="#artigos" class="glass-panel px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white/10 hover:border-white/20 transition-all-300 shadow-md">
+                    Começar a Ler
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-16 pb-32 md:pt-24 md:pb-48 px-4 overflow-hidden flex-grow flex flex-col justify-center">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <!-- Badge Chamativa -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-purple-500/30 text-purple-300 text-xs font-semibold mb-8 animate-pulse">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                Novos Artigos Semanais sobre IA & Data Science
+            </div>
+
+            <!-- Título Principal (Inspirado no estilo do GitHub com gradiente sofisticado) -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
+                O futuro da tecnologia de dados <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-white via-indigo-200 to-purple-400 bg-clip-text text-transparent">acontece em conjunto</span>
+            </h1>
+
+            <!-- Subtítulo descritivo -->
+            <p class="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10">
+                As ferramentas e os modelos evoluem, mas a busca por conhecimento permanece. Aqui, programadores, cientistas de dados e entusiastas de IA se unem para desvendar o poder do Django, Estatística Avançada, Data Science e Inteligência Artificial.
+            </p>
+
+            <!-- Bloco de Formulário e Ações (Réplica do visual do GitHub da imagem) -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto mb-16">
+                <!-- Caixa de Input de Email com Botão de Registro Acoplado -->
+                <form id="newsletter-hero-form" onsubmit="handleSignup(event)" class="w-full sm:flex-1 flex flex-col sm:flex-row rounded-lg overflow-hidden border border-white/10 focus-within:border-indigo-500/50 shadow-2xl transition-all-300 bg-[#0f111a]">
+                    <input 
+                        type="email" 
+                        required 
+                        placeholder="Digite seu e-mail" 
+                        class="w-full px-5 py-3.5 bg-transparent text-white placeholder-slate-500 text-sm focus:outline-none"
+                    />
+                    <button 
+                        type="submit" 
+                        class="w-full sm:w-auto bg-brand-githubGreen hover:bg-brand-githubGreenHover text-white font-semibold text-sm px-6 py-3.5 whitespace-nowrap transition-all-300 flex items-center justify-center gap-2 shrink-0"
+                    >
+                        Cadastrar no Hub
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <!-- Botão Secundário Outlined -->
+                <a 
+                    href="#artigos" 
+                    class="w-full sm:w-auto border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 px-6 py-3.5 rounded-lg text-sm font-semibold text-white transition-all-300 text-center flex items-center justify-center gap-2"
+                >
+                    Explorar os Artigos
+                </a>
+            </div>
+        </div>
+
+        <!-- Área dos Personagens Flutuantes (Simulando o palco da imagem enviada) -->
+        <div class="relative w-full max-w-5xl mx-auto h-[260px] md:h-[320px] mt-4 flex items-center justify-center overflow-visible">
+            
+            <!-- Palco de Luz Traseira (Glow de fundo atrás dos bonecos) -->
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[160%] sm:w-[120%] h-[150px] bottom-light-beam rounded-t-full pointer-events-none z-0"></div>
+
+            <!-- Grid Organizador dos Personagens Flutuantes -->
+            <div class="relative w-full h-full flex items-center justify-around px-4 z-10 max-w-4xl">
+                
+                <!-- PERSONAGEM 1: O Robozinho IA (Lado Esquerdo) -->
+                <div class="animate-float-bot flex flex-col items-center group">
+                    <div class="w-24 h-24 md:w-32 md:h-32 neon-glow-purple flex items-center justify-center transition-transform group-hover:scale-110">
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                            <!-- Corpo Principal (Arredondado Metálico Violeta) -->
+                            <rect x="35" y="45" width="130" height="110" rx="45" fill="url(#botGradient)" stroke="#c084fc" stroke-width="4"/>
+                            <!-- Tela de Feedback Facial (Visor Azul Neon) -->
+                            <rect x="50" y="65" width="100" height="70" rx="20" fill="#090d1f" stroke="#38bdf8" stroke-width="3"/>
+                            <!-- Olhos Digitais de Inteligência Artificial -->
+                            <ellipse cx="80" cy="100" rx="14" ry="14" fill="#38bdf8"/>
+                            <ellipse cx="120" cy="100" rx="14" ry="14" fill="#38bdf8"/>
+                            <!-- Brilhos de Pupila -->
+                            <circle cx="84" cy="96" r="4" fill="#ffffff"/>
+                            <circle cx="124" cy="96" r="4" fill="#ffffff"/>
+                            <!-- Antenas/Fones de Ouvido Laterais -->
+                            <rect x="15" y="80" width="20" height="40" rx="8" fill="#a855f7"/>
+                            <rect x="165" y="80" width="20" height="40" rx="8" fill="#a855f7"/>
+                            <!-- Antena Superior com Luz Piscante -->
+                            <line x1="100" y1="45" x2="100" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="100" cy="15" r="8" fill="#f472b6" class="animate-pulse"/>
+                            <!-- Gradientes Usados -->
+                            <defs>
+                                <linearGradient id="botGradient" x1="35" y1="45" x2="165" y2="155" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#c084fc"/>
+                                    <stop offset="100%" stop-color="#6366f1"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-purple-300 bg-purple-950/60 px-3 py-1 rounded-full border border-purple-500/25">Mascote IA</span>
+                </div>
+
+                <!-- PERSONAGEM 2: A Esfera Gato Rosa (Ao Centro - Mais alta) -->
+                <div class="animate-float-cat flex flex-col items-center group -translate-y-6 md:-translate-y-10">
+                    <div class="w-24 h-24 md:w-32 md:h-32 neon-glow-pink flex items-center justify-center transition-transform group-hover:scale-110">
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                            <!-- Orelhas de Gatinho -->
+                            <path d="M50 65 L25 20 L75 40 Z" fill="#ec4899" stroke="#f472b6" stroke-width="3"/>
+                            <path d="M150 65 L175 20 L125 40 Z" fill="#ec4899" stroke="#f472b6" stroke-width="3"/>
+                            <!-- Interior das Orelhas -->
+                            <path d="M50 60 L35 32 L65 44 Z" fill="#f472b6"/>
+                            <path d="M150 60 L165 32 L135 44 Z" fill="#f472b6"/>
+                            <!-- Corpo Esférico (Mona Orb) -->
+                            <circle cx="100" cy="110" r="65" fill="url(#pinkOrbGradient)" stroke="#f472b6" stroke-width="4"/>
+                            <!-- Rosto/Olhos Fofos -->
+                            <circle cx="75" cy="105" r="10" fill="#0d0d1f"/>
+                            <circle cx="125" cy="105" r="10" fill="#0d0d1f"/>
+                            <!-- Brilhos dos Olhos -->
+                            <circle cx="78" cy="102" r="3" fill="#ffffff"/>
+                            <circle cx="128" cy="102" r="3" fill="#ffffff"/>
+                            <!-- Bochechas Coradas -->
+                            <ellipse cx="65" cy="120" rx="10" ry="5" fill="#f43f5e" opacity="0.6"/>
+                            <ellipse cx="135" cy="120" rx="10" ry="5" fill="#f43f5e" opacity="0.6"/>
+                            <!-- Focinho/Boca Fofa de Gatinho (Estilo :3) -->
+                            <path d="M93 118 Q100 125 107 118 Q114 125 121 118" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Gradientes Usados -->
+                            <defs>
+                                <linearGradient id="pinkOrbGradient" x1="35" y1="45" x2="165" y2="175" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#f472b6"/>
+                                    <stop offset="100%" stop-color="#db2777"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-pink-300 bg-pink-950/60 px-3 py-1 rounded-full border border-pink-500/25">Mona Data-Bot</span>
+                </div>
+
+                <!-- PERSONAGEM 3: O Patinho Amarelo de Debugging (Lado Direito) -->
+                <div class="animate-float-duck flex flex-col items-center group">
+                    <div class="w-24 h-24 md:w-32 md:h-32 neon-glow-yellow flex items-center justify-center transition-transform group-hover:scale-110">
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                            <!-- Corpo Principal do Patinho -->
+                            <circle cx="100" cy="115" r="55" fill="url(#duckGradient)" stroke="#eab308" stroke-width="4"/>
+                            <!-- Cabeça do Patinho -->
+                            <circle cx="100" cy="65" r="38" fill="url(#duckGradient)" stroke="#eab308" stroke-width="3"/>
+                            <!-- Olhos com Óculos Inteligentes de Cientista -->
+                            <!-- Armação dos Óculos -->
+                            <rect x="65" y="52" width="28" height="20" rx="6" stroke="#1e293b" stroke-width="4" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="107" y="52" width="28" height="20" rx="6" stroke="#1e293b" stroke-width="4" fill="rgba(255,255,255,0.2)"/>
+                            <line x1="93" y1="62" x2="107" y2="62" stroke="#1e293b" stroke-width="4"/>
+                            <!-- Olhos dentro dos óculos -->
+                            <circle cx="79" cy="62" r="5" fill="#1e293b"/>
+                            <circle cx="121" cy="62" r="5" fill="#1e293b"/>
+                            <!-- Bico Laranja Vibrante -->
+                            <path d="M85 75 Q100 95 115 75 Q100 70 85 75 Z" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
+                            <!-- Asinha Lateral -->
+                            <path d="M52 110 Q70 100 85 115 Q75 135 52 110 Z" fill="#fbbf24"/>
+                            <!-- Gradientes Usados -->
+                            <defs>
+                                <linearGradient id="duckGradient" x1="60" y1="30" x2="140" y2="150" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#fef08a"/>
+                                    <stop offset="100%" stop-color="#eab308"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-yellow-300 bg-yellow-950/60 px-3 py-1 rounded-full border border-yellow-500/25">Patinho de Debug</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Tópicos (As 4 Grandes Áreas) -->
+    <section id="topicos" class="py-24 px-4 bg-[#02020a]/80 border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Esferas de Conhecimento</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">Nossos conteúdos são estruturados sobre os quatro pilares mais importantes da arquitetura de dados e desenvolvimento de software moderno.</p>
+            </div>
+
+            <!-- Grid de Tópicos com Cards Interativos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- CARD 1: Django -->
+                <div class="glass-panel p-8 rounded-2xl hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5 group transition-all-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-all-300">
+                            <i data-lucide="globe" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-slate-100 group-hover:text-emerald-400 transition-colors">Django Framework</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Aprenda a construir APIs seguras, robustas e escaláveis utilizando o framework web preferido dos cientistas de dados.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold tracking-wider uppercase">
+                        <span>Explorar Artigos</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1.5 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- CARD 2: Estatística -->
+                <div class="glass-panel p-8 rounded-2xl hover:border-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/5 group transition-all-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-all-300">
+                            <i data-lucide="calculator" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-slate-100 group-hover:text-indigo-400 transition-colors">Estatística Teórica & Prática</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Do teorema de Bayes a testes de hipóteses avançados. A base teórica indispensável que garante que seus modelos sejam precisos.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold tracking-wider uppercase">
+                        <span>Explorar Artigos</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1.5 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- CARD 3: Data Science -->
+                <div class="glass-panel p-8 rounded-2xl hover:border-pink-500/30 hover:shadow-lg hover:shadow-pink-500/5 group transition-all-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/25 flex items-center justify-center text-pink-400 mb-6 group-hover:scale-110 transition-all-300">
+                            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-slate-100 group-hover:text-pink-400 transition-colors">Data Science</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Descubra valor oculto em dados brutos. Engenharia de features, visualizações interativas e manipulação de grandes volumes de dados.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-pink-400 text-xs font-bold tracking-wider uppercase">
+                        <span>Explorar Artigos</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1.5 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- CARD 4: Inteligência Artificial -->
+                <div class="glass-panel p-8 rounded-2xl hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5 group transition-all-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-all-300">
+                            <i data-lucide="cpu" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-slate-100 group-hover:text-purple-400 transition-colors">Inteligência Artificial</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">Domine algoritmos de Deep Learning, Processamento de Linguagem Natural (NLP), Agentes Inteligentes e LLMs modernas.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-purple-400 text-xs font-bold tracking-wider uppercase">
+                        <span>Explorar Artigos</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1.5 transition-transform"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Artigos com Sistema de Filtro -->
+    <section id="artigos" class="py-24 px-4 relative max-w-7xl mx-auto w-full">
+        
+        <!-- Cabeçalho do Bloco -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <h2 class="text-3xl font-extrabold mb-3">Feed de Artigos Recentes</h2>
+                <p class="text-slate-400 text-sm sm:text-base">Selecione uma categoria abaixo para filtrar os tópicos do seu interesse.</p>
+            </div>
+            
+            <!-- Barra de Filtros Interativa (Executada em Vanilla JS) -->
+            <div class="flex flex-wrap gap-2 p-1.5 rounded-xl glass-panel self-start md:self-auto">
+                <button onclick="filterArticles('all')" id="btn-all" class="filter-btn active-filter px-4 py-2 rounded-lg text-xs font-semibold bg-white/15 text-white transition-all-300">
+                    Todos
+                </button>
+                <button onclick="filterArticles('django')" id="btn-django" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all-300">
+                    Django
+                </button>
+                <button onclick="filterArticles('estatistica')" id="btn-estatistica" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all-300">
+                    Estatística
+                </button>
+                <button onclick="filterArticles('datascience')" id="btn-datascience" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all-300">
+                    Data Science
+                </button>
+                <button onclick="filterArticles('ia')" id="btn-ia" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all-300">
+                    Inteligência Artificial
+                </button>
+            </div>
+        </div>
+
+        <!-- Grade Dinâmica de Artigos -->
+        <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Artigo 1: Django + AI -->
+            <article data-category="django" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-emerald-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/20 px-2.5 py-1 rounded-full uppercase">Django</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="database" class="w-16 h-16 text-emerald-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 08 de Junho, 2026 • 6 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-emerald-400 transition-colors">Arquitetura Django escalável com Postgre e Docker</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">Veja como configurar um ambiente de produção no Django utilizando recipientes Docker e otimizando consultas pesadas no PostgreSQL para sistemas de alto tráfego.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Arthur Ramos</strong></span>
+                    <a href="#" class="text-xs font-semibold text-emerald-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+            <!-- Artigo 2: Estatística -->
+            <article data-category="estatistica" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-indigo-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-indigo-400 bg-indigo-950/80 border border-indigo-500/20 px-2.5 py-1 rounded-full uppercase">Estatística</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="binary" class="w-16 h-16 text-indigo-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 05 de Junho, 2026 • 8 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-indigo-400 transition-colors">Análise Bayesiana aplicada ao mundo real</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">Esqueça a estatística frequentista por um minuto. Entenda de forma prática como a probabilidade Bayesiana revoluciona tomadas de decisão sob incerteza.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Dra. Beatriz Luz</strong></span>
+                    <a href="#" class="text-xs font-semibold text-indigo-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+            <!-- Artigo 3: Data Science -->
+            <article data-category="datascience" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-pink-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1543682704-15adeb008ac4?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-pink-400 bg-pink-950/80 border border-pink-500/20 px-2.5 py-1 rounded-full uppercase">Data Science</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="line-chart" class="w-16 h-16 text-pink-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 02 de Junho, 2026 • 5 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-pink-400 transition-colors">Storytelling com Dados usando Seaborn e Plotly</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">Gráficos feios não vendem ideias. Aprenda como criar narrativas visuais deslumbrantes que mantêm investidores e diretores focados em suas análises.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Felipe Mendes</strong></span>
+                    <a href="#" class="text-xs font-semibold text-pink-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+            <!-- Artigo 4: Inteligência Artificial -->
+            <article data-category="ia" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-purple-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-purple-400 bg-purple-950/80 border border-purple-500/20 px-2.5 py-1 rounded-full uppercase">I.A.</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="brain-circuit" class="w-16 h-16 text-purple-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 29 de Maio, 2026 • 10 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-purple-400 transition-colors">Criando Agentes Autônomos de IA com LangChain</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">Guia passo a passo para conectar modelos de linguagem LLM à web e a bancos de dados privados para tomar decisões inteligentes e automatizadas.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Lucas Nogueira</strong></span>
+                    <a href="#" class="text-xs font-semibold text-purple-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+            <!-- Artigo 5: Django + Data Science -->
+            <article data-category="django" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-emerald-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/20 px-2.5 py-1 rounded-full uppercase">Django</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="cpu" class="w-16 h-16 text-emerald-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 26 de Maio, 2026 • 7 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-emerald-400 transition-colors">Integração Real-time do Django com Pandas</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">Como importar planilhas monstruosas diretamente no ORM do Django, utilizando processamento paralelo com Pandas e Celery Workers de forma transparente.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Arthur Ramos</strong></span>
+                    <a href="#" class="text-xs font-semibold text-emerald-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+            <!-- Artigo 6: Estatística para IA -->
+            <article data-category="estatistica" class="article-card glass-panel rounded-2xl overflow-hidden group hover:-translate-y-1 transition-all-300 flex flex-col justify-between">
+                <div>
+                    <div class="h-48 bg-gradient-to-br from-indigo-950/40 to-slate-900 relative flex items-center justify-center border-b border-white/5 overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-700" style="background-image: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80')"></div>
+                        <span class="absolute top-4 left-4 text-xs font-bold text-indigo-400 bg-indigo-950/80 border border-indigo-500/20 px-2.5 py-1 rounded-full uppercase">Estatística</span>
+                        <!-- Elemento Visual Grande -->
+                        <i data-lucide="sigma" class="w-16 h-16 text-indigo-500/30 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-slate-500 flex items-center gap-1.5 mb-3">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 20 de Maio, 2026 • 9 min de leitura
+                        </span>
+                        <h3 class="text-lg font-bold mb-2 group-hover:text-indigo-400 transition-colors">Álgebra Linear e Gradiente Descendente Simplificados</h3>
+                        <p class="text-slate-400 text-sm line-clamp-3 mb-4">O motor matemático de redes neurais explicado passo a passo. Entenda a matemática por trás da convergência de modelos de Deep Learning sem mistério.</p>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Por <strong>Dra. Beatriz Luz</strong></span>
+                    <a href="#" class="text-xs font-semibold text-indigo-400 flex items-center gap-1 hover:underline">Ler artigo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- Seção Newsletter Final (Chamada para Ação) -->
+    <section id="newsletter" class="py-24 px-4 relative overflow-hidden bg-[#03030b] border-t border-white/5">
+        
+        <!-- Fundo Neon Abstrato -->
+        <div class="absolute right-0 bottom-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute left-0 top-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto glass-panel p-8 sm:p-16 rounded-3xl relative z-10 border border-white/10 text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">Não perca nenhuma inovação tecnológica</h2>
+            <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base mb-8">Nós enviamos um e-mail toda quinta-feira com artigos selecionados, resumos de estatística, scripts prontos em Django e novidades de inteligência artificial.</p>
+            
+            <form id="newsletter-footer-form" onsubmit="handleSignup(event)" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                <input 
+                    type="email" 
+                    required 
+                    placeholder="Digite seu e-mail" 
+                    class="w-full sm:flex-1 px-5 py-3.5 rounded-lg glass-panel text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-all-300"
+                />
+                <button 
+                    type="submit" 
+                    class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm px-8 py-3.5 rounded-lg transition-all-300 whitespace-nowrap"
+                >
+                    Inscrever-se Grátis
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Seção de Alerta de Sucesso Modal Customizado (Substituindo o "alert()" que quebra iframe) -->
+    <div id="success-toast" class="fixed bottom-6 right-6 z-50 glass-panel border-emerald-500/40 p-4 rounded-xl shadow-2xl flex items-center gap-3 translate-y-24 opacity-0 transition-all-500 pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <i data-lucide="check" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-slate-100 text-sm">Cadastro realizado!</h4>
+            <p class="text-xs text-slate-400">Bem-vindo(a) ao ecossistema DevStats.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="sobre" class="bg-[#010105] py-12 px-4 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center">
+                    <i data-lucide="terminal" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-slate-400 text-sm">© 2026 DevStats Hub. Criado em conjunto para o futuro.</span>
+            </div>
+            
+            <div class="flex items-center gap-6 text-xs text-slate-400">
+                <a href="#" class="hover:text-white transition-colors">Privacidade</a>
+                <a href="#" class="hover:text-white transition-colors">Termos de Uso</a>
+                <a href="#" class="hover:text-white transition-colors">Fale Conosco</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts do Sistema de Filtros e Animações -->
+    <script>
+        // Inicializa ícones do Lucide
+        lucide.createIcons();
+
+        // Função de Filtro de Artigos Interativo
+        function filterArticles(category) {
+            const cards = document.querySelectorAll('.article-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // Atualiza os botões visualmente
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-white/15', 'text-white');
+                btn.classList.add('text-slate-400', 'hover:bg-white/5');
+            });
+
+            const activeBtn = document.getElementById(`btn-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:bg-white/5');
+                activeBtn.classList.add('bg-white/15', 'text-white');
+            }
+
+            // Filtra os cards aplicando animação de transição suave
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'flex';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(10px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300); // tempo correspondente ao transition do tailwind
+                }
+            });
+        }
+
+        // Simulação elegante do formulário de e-mail (sem usar alert())
+        function handleSignup(event) {
+            event.preventDefault();
+            const input = event.target.querySelector('input');
+            if (input) {
+                input.value = ''; // Limpa o input
+            }
+
+            // Exibe o Toast de Sucesso customizado
+            const toast = document.getElementById('success-toast');
+            toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Esconde automaticamente após 4 segundos
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
