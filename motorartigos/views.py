@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
-# Create your views here.
-# aqui vou criar minhas rotas
-# minhas regras de negócio
+#from django.http import HttpResponse
+def index(request):
+    #return HttpResponse('<h1>Oi</h1>')
+    return render(request,'motorartigos/index.html')
