@@ -13,9 +13,18 @@
 
 */
 body{
-    background-color: black;
-    
+    background-color:#9c7c7c;    
 }
 h1{
     color:white;
+}
+img{
+    width:10%;
+}
+.rodape {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f1f1f1;
+    color: #333;
+    margin-top: auto; /* Pushes the footer to the bottom if the body is a flex container */
 }
