@@ -4,4 +4,4 @@ from motorartigos.views import index,artigo
 urlpatterns = [
     path('',index),
     path('artigo/',artigo,name='artigo')
-]
+ ]
