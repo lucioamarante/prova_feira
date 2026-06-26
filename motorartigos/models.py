@@ -35,6 +35,8 @@ class Artigo(models.Model):
         verbose_name='Título',
         default='Sem título'
     )
+    foto = models.ImageField(upload_to="fotos/%Y/%m/%d/", blank=True)
+    publicada = models.BooleanField(default=False)
     TAG_NIVEL = [
         ("B", "Básico"),
         ("I", "Intermediário"),
@@ -42,9 +44,9 @@ class Artigo(models.Model):
     ]
 
     nivel = models.CharField(
-        max_length=1,           # 👈 era 50, mas o valor máximo é 1 char ("B","I","A")
+        max_length=1,           
         choices=TAG_NIVEL,
-        default='B',            # 👈 era '' (inválido para choices)
+        default='B',            
         verbose_name='Nível'
     )
     texto = HTMLField(verbose_name='Texto')
@@ -56,14 +58,14 @@ class Artigo(models.Model):
         EixoTecnologia,
         on_delete=models.CASCADE,
         db_column='id_fk_eixo',
-        verbose_name='Eixo',        # ✅ corrigido (estava 'autor')
+        verbose_name='Eixo',        
         related_name='artigos'
     )
     id_fk_autor = models.ForeignKey(
         Autor,
         on_delete=models.CASCADE,
         db_column='id_fk_autor',
-        verbose_name='Autor',       # ✅ correto
+        verbose_name='Autor',       
         related_name='artigos'
     )
 
@@ -74,4 +76,4 @@ class Artigo(models.Model):
         db_table = 'artigo'
         verbose_name = 'Artigo'
         verbose_name_plural = 'Artigos'
-        ordering = ['-data_publicacao']  # 👈 mais recentes primeiro
+        ordering = ['-data_publicacao']  
