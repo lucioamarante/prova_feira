@@ -1,0 +1,7 @@
+index.html
+1-imagens e cards (bonito)
+2-Mais recentes
+3-Todos os artigos
+4-Caixinha de busca (funcionando)
+5-Filtro por eixo
+6-Leitura do Artigo
