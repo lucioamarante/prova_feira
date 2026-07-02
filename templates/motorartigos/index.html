@@ -27,6 +27,9 @@
                             <p class="card-text text-secondary small">Os agentes de inteligência artificial estão a
                                 redefinir a automação moderna. Neste artigo...</p>
                         </div>
+                        <span class="small text-white">
+                             eixo: IA
+                        </span>
                         <div
                             class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
                             <span class="small text-white"><span class="avatar me-1">AC</span> Ana Costa</span>
@@ -104,6 +107,9 @@
                             <p class="card-text text-secondary small">Garantir que um ecossistema se mantém estável sob
                                 picos repentinos de acessos exige rob...</p>
                         </div>
+                         <span class="small text-white">
+                             Eixo: IA
+                        </span>
                         <div
                             class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
                             <span class="small text-white"><span class="avatar me-1 bg-primary">JS</span> João
@@ -120,44 +126,52 @@
 <section class="container mb-5">
     <h4 class="text-white fw-bold mb-4">Todos os Artigos</h4>
 
-    <div class="row g-4">
-        {% for artigo in artigos %} 
-        <div class="col-12 col-md-6 col-lg-4">
-            <a href="#" class="text-decoration-none">
-                <div class="card card-custom h-100 border-0">
-                    <div class="position-relative">
-                        {% if artigo.foto %}
-                            <img src="{{ artigo.foto.url }}" class="card-img-top" alt="{{ artigo.titulo }}">
-                        {% else %}
-                            <div class="card-img-top thumb-gradient"></div>
-                        {% endif %}
-                        
-                        <span class="badge position-absolute top-0 end-0 m-3 bg-primary">
-                            {{ artigo.get_nivel_display }}
+   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4"> <!-- Alterado para col-lg-4 para 4 itens -->
+    {% for artigo in artigos %} 
+    <div class="col">
+        <a href="#" class="text-decoration-none">
+            <div class="card card-custom h-100 border-0">
+                <div class="position-relative">
+                    {% if artigo.foto %}
+                        <img src="{{ artigo.foto.url }}" class="card-img-top" alt="{{ artigo.titulo }}">
+                    {% else %}
+                        <div class="card-img-top thumb-gradient"></div>
+                    {% endif %}
+                    
+                    <!-- Lógica condicional para cor do badge -->
+                    <span class="badge position-absolute top-0 end-0 m-3 
+                        {% if artigo.nivel == 'AVANCADO' %}bg-danger-custom
+                        {% elif artigo.nivel == 'INTERMEDIARIO' %}bg-warning-custom text-dark
+                        {% else %}bg-success-custom{% endif %}">
+                        {{ artigo.get_nivel_display }}
+                    </span>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <small class="text-secondary d-block mb-2">🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
+                        <h5 class="card-title text-white fw-bold fs-6">{{ artigo.titulo }}</h5>
+                        <!-- Resumo do texto truncado -->
+                        <p class="card-text text-secondary small">
+                            {{ artigo.conteudo|truncatechars:100 }}
+                        </p>
+                        <span class="small text-white">
+                             eixo {{  artigo.id_fk_eixo.nome  }}
                         </span>
                     </div>
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <small class="text-secondary d-block mb-2">🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
-                            <h5 class="card-title text-white fw-bold fs-6">{{ artigo.titulo }}</h5>
-                            <p class="card-text text-secondary small">
-                                Eixo: {{ artigo.id_fk_eixo.nome }}
-                            </p>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
-                            <span class="small text-white">
-                                <span class="avatar me-1">AC</span> {{ artigo.id_fk_autor.nome }}
-                            </span>
-                            <span class="text-primary-custom small fw-bold">Ler mais →</span>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
+                        <span class="small text-white">
+                            <!-- Avatar e Nome dinâmicos -->
+                            <span class="avatar me-1">{{ artigo.id_fk_autor.nome|slice:":2"|upper }}</span> 
+                            {{ artigo.id_fk_autor.nome }}
+                        </span>
+                        <span class="text-primary-custom small fw-bold">Ler mais →</span>
                     </div>
                 </div>
-            </a>
-        </div>
-        {% empty %}
-            <p class="text-white">Nenhum artigo encontrado.</p>
-        {% endfor %}
+            </div>
+        </a>
     </div>
+    {% endfor %}
+</div>
 </section>
 
 {% endblock %}
