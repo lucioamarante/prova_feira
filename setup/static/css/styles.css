@@ -163,3 +163,101 @@ body {
         border-color: rgba(13, 110, 253, 0.3);
         transform: translateY(-3px);
     }
+
+    /* ==========================================================================
+   ESTILIZAÇÃO DA PÁGINA DE LEITURA DO ARTIGO (TINYMCE COMPATÍVEL)
+   ========================================================================== */
+
+/* Container de leitura com largura máxima otimizada para legibilidade */
+.article-reader {
+    color: #b0b7c6 !important; /* Cor secundária suave para leitura longa */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.8;
+}
+
+/* Títulos internos gerados pelo editor ricos em contraste */
+.article-reader h2, 
+.article-reader h3, 
+.article-reader h4 {
+    color: #ffffff !important;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.025em;
+}
+
+.article-reader h2 { font-size: 1.75rem; }
+.article-reader h3 { font-size: 1.5rem; }
+
+/* Parágrafos e espaçamentos */
+.article-reader p {
+    margin-bottom: 1.5rem;
+}
+
+/* Links inseridos no meio do texto */
+.article-reader a {
+    color: #00bcd4; /* Cor de destaque customizada do seu tema */
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+.article-reader a:hover {
+    color: #00acc1;
+}
+
+/* Listas internas do artigo */
+.article-reader ul, 
+.article-reader ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+.article-reader li {
+    margin-bottom: 0.5rem;
+}
+
+/* Citações em Bloco (Blockquotes) */
+.article-reader blockquote {
+    border-left: 4px solid #00bcd4;
+    background-color: #111827;
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+.article-reader blockquote p {
+    margin-bottom: 0;
+}
+
+/* Código Inline (ex: `codigo`) */
+.article-reader code {
+    background-color: #1e293b;
+    color: #f43f5e;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.875em;
+    font-family: 'Fira Code', Consolas, monospace;
+}
+
+/* Blocos de Código Grandes (Preformatted text) */
+.article-reader pre {
+    background-color: #0f172a !important;
+    border: 1px solid #334155;
+    padding: 1.25rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+}
+.article-reader pre code {
+    background-color: transparent;
+    color: #cbd5e1;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Imagens responsivas que forem inseridas dentro do corpo do texto */
+.article-reader img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem 0;
+}

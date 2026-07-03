@@ -1,5 +1,6 @@
 from django.db import models
 from tinymce.models import HTMLField
+from django.urls import reverse
 
 
 class Autor(models.Model):
@@ -77,3 +78,6 @@ class Artigo(models.Model):
         verbose_name = 'Artigo'
         verbose_name_plural = 'Artigos'
         ordering = ['-data_publicacao']  
+    # Adicione este método dentro da classe Artigo no seu models.py:
+    def get_absolute_url(self):
+       return reverse('detalhe_artigo', args=[self.id])
