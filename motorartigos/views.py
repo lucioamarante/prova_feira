@@ -1,30 +1,47 @@
 from django.shortcuts import render
 #from django.http import HttpResponse
-from motorartigos.models import Autor,Artigo
+from motorartigos.models import Autor,Artigo,EixoTecnologia
 from django.db.models import Q # Importante para buscas complexas
 
+
 def index(request):
-    # Todos os artigos para a seção "Todos os Artigos"
-    artigos_todos = Artigo.objects.filter(publicada=True)
+    artigos_base = Artigo.objects.filter(publicada=True)
     
-    # Apenas os 4 últimos para a seção "Mais recentes"
-    artigos_recentes = Artigo.objects.filter(publicada=True).order_by('-data_publicacao')[:4]
-    # Captura o termo de busca vindo do input name="busca"
+    # CORREÇÃO AQUI: Busca diretamente da tabela de eixos. 
+    # Assim, virão apenas os 3 eixos cadastrados, sem duplicar!
+    eixos = EixoTecnologia.objects.all()
+
     termo_busca = request.GET.get('busca')
+    eixo_id = request.GET.get('eixo')
+
+    artigos_todos = artigos_base
+
+    # Se clicou em um eixo específico, filtra por ele
+    if eixo_id:
+        artigos_todos = artigos_todos.filter(id_fk_eixo__id=eixo_id)
+
+    # Se digitou algo na barra de pesquisa
     if termo_busca:
-        # Filtra título, conteúdo, nome do autor ou nome do eixo
         artigos_todos = artigos_todos.filter(
             Q(titulo__icontains=termo_busca) | 
             Q(texto__icontains=termo_busca) |
             Q(id_fk_autor__nome__icontains=termo_busca) |
             Q(id_fk_eixo__nome__icontains=termo_busca)
         )
+    
+    artigos_recentes = artigos_base.order_by('-data_publicacao')[:4]
 
     contexto = {
         'artigos': artigos_todos,
-        'artigos_recentes': artigos_recentes
+        'artigos_recentes': artigos_recentes,
+        'eixos': eixos,                           
+        'eixo_selecionado': eixo_id,               
+        'termo_busca': termo_busca                 
     }
     return render(request, 'motorartigos/index.html', contexto)
+
+def artigo(request):
+    return render(request,'motorartigos/artigo.html')
 
 def artigo(request):
     return render(request,'motorartigos/artigo.html')

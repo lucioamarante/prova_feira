@@ -75,14 +75,28 @@ body {
 
 .card-custom:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Cores das Badges dos Cards */
-.bg-danger-custom { background-color: #ef4444; font-size: 0.7rem; }
-.bg-warning-custom { background-color: #f59e0b; font-size: 0.7rem; }
-.bg-success-custom { background-color: #10b981; font-size: 0.7rem; }
-.text-primary-custom { color: #60a5fa; }
+.bg-danger-custom {
+    background-color: #ef4444;
+    font-size: 0.7rem;
+}
+
+.bg-warning-custom {
+    background-color: #f59e0b;
+    font-size: 0.7rem;
+}
+
+.bg-success-custom {
+    background-color: #10b981;
+    font-size: 0.7rem;
+}
+
+.text-primary-custom {
+    color: #60a5fa;
+}
 
 /* Placeholders das Imagens dos Cards com os tons da imagem */
 .thumb-gradient {
@@ -116,3 +130,36 @@ body {
 .text-xs {
     font-size: 0.75rem;
 }
+
+/* UI Refinements */
+    .tracking-tight {
+        letter-spacing: -0.025em;
+    }
+    .quote-text {
+        font-size: 0.78rem;
+        font-style: italic;
+        opacity: 0.85;
+    }
+    .border-dark-light {
+        border-color: #1e2638 !important; /* Linha sutil de divisão */
+    }
+    
+    /* UX Micro-interactions */
+    .social-link {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .social-link:hover {
+        color: #0d6efd !important; 
+        background-color: rgba(13, 110, 253, 0.08);
+        border-color: rgba(13, 110, 253, 0.3);
+        transform: translateY(-3px);
+    }
