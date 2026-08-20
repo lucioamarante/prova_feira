@@ -3,7 +3,7 @@ from tinymce.models import HTMLField
 from django.urls import reverse
 
 
-class Autor(models.Model):
+class Responsavel(models.Model):
     nome = models.CharField(max_length=100, verbose_name='Nome')
     biografia = models.TextField(verbose_name='Biografia')
     email = models.EmailField(verbose_name='E-mail')
@@ -12,9 +12,9 @@ class Autor(models.Model):
         return self.nome
 
     class Meta:
-        db_table = 'autor'
-        verbose_name = 'Autor'
-        verbose_name_plural = 'Autores'
+        db_table = 'responsavel'
+        verbose_name = 'Responsável'
+        verbose_name_plural = 'Responsáveis'
 
 
 class EixoTecnologia(models.Model):
@@ -39,15 +39,21 @@ class Artigo(models.Model):
     foto = models.ImageField(upload_to="fotos/%Y/%m/%d/", blank=True)
     publicada = models.BooleanField(default=False)
     TAG_NIVEL = [
-        ("B", "Básico"),
-        ("I", "Intermediário"),
-        ("A", "Avançado"),
+        ("bo", "box"),
+        ("ru", "rua"),
+        ("mi", "minishopping"),
+        ("ga", "galpão"),
+        ("lo", "loja de fachada"),
+        ("gal", "galeria de rua"),
+        ("ba", "banca"),
+        ("co", "corredor"),
+        ("ca", "calçada"),
     ]
 
     nivel = models.CharField(
-        max_length=1,           
+        max_length=3,
         choices=TAG_NIVEL,
-        default='B',            
+        default='bo',            
         verbose_name='Nível'
     )
     texto = HTMLField(verbose_name='Texto')
@@ -62,16 +68,16 @@ class Artigo(models.Model):
         verbose_name='Eixo',        
         related_name='artigos'
     )
-    id_fk_autor = models.ForeignKey(
-        Autor,
+    id_fk_responsavel = models.ForeignKey(
+        Responsavel,
         on_delete=models.CASCADE,
-        db_column='id_fk_autor',
-        verbose_name='Autor',       
+        db_column='id_fk_responsavel',
+        verbose_name='Responsável',       
         related_name='artigos'
     )
 
     def __str__(self):
-        return f"Artigo {self.id} – {self.id_fk_autor.nome}"  # 👈 mais legível
+        return f"Artigo {self.id} – {self.id_fk_responsavel.nome}"  # 👈 mais legível
 
     class Meta:
         db_table = 'artigo'

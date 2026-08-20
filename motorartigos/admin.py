@@ -1,12 +1,12 @@
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 from django.db import models as db_models
-from .models import Autor, EixoTecnologia, Artigo
+from .models import Responsavel, EixoTecnologia, Artigo
 from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
-@admin.register(Autor)
-class AutorAdmin(admin.ModelAdmin):
+@admin.register(Responsavel)
+class ResponsavelAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome', 'email')
     search_fields = ('nome', 'email')
 
@@ -23,8 +23,8 @@ def resumo_texto(self, obj):
 
 @admin.register(Artigo)
 class ArtigoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'id_fk_autor', 'id_fk_eixo', 'nivel', 'resumo_texto', 'data_publicacao')
-    search_fields = ('titulo', 'id_fk_autor__nome', 'texto')
+    list_display = ('id', 'titulo', 'id_fk_responsavel', 'id_fk_eixo', 'nivel', 'resumo_texto', 'data_publicacao')
+    search_fields = ('titulo', 'id_fk_responsavel__nome', 'texto')
     list_filter = ('id_fk_eixo', 'nivel', 'data_publicacao')
     list_display_links = ('id', 'titulo')   # 👈 tanto id quanto título viram link de edição
     formfield_overrides = {

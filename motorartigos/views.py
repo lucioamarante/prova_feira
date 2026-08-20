@@ -1,6 +1,6 @@
 from django.shortcuts import render
 #from django.http import HttpResponse
-from motorartigos.models import Autor,Artigo,EixoTecnologia
+from motorartigos.models import Responsavel,Artigo,EixoTecnologia
 from django.db.models import Q # Importante para buscas complexas
 
 

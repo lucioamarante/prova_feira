@@ -4,7 +4,7 @@
 {% block content %}
 <section class="container mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-white fw-bold m-0">Mais recentes</h4>
+        <h4 class="text-white fw-bold m-0">Mais Quentes </h4>
         <div>
             <!--<button class="btn btn-nav me-1">‹</button>-->
             <!-- <button class="btn btn-nav">›</button> -->
@@ -23,23 +23,31 @@
                             <div class="card-img-top thumb-gradient"></div>
                         {% endif %}
                         
-                        <span class="badge position-absolute top-0 end-0 m-3 
-                            {% if artigo.nivel == 'AVANCADO' %}bg-danger-custom
-                            {% elif artigo.nivel == 'INTERMEDIARIO' %}bg-warning-custom text-dark
-                            {% else %}bg-success-custom{% endif %}">
-                            {{ artigo.get_nivel_display }}
-                        </span>
+                         <!-- Lógica condicional para cor do badge -->
+                    <span class="badge position-absolute top-0 end-0 m-3 px-2 py-1
+                        {% if artigo.nivel == 'bo' %}bg-danger-custom
+                        {% elif artigo.nivel == 'ru' %}bg-warning-custom text-dark
+                        {% elif artigo.nivel == 'mi' %}bg-info-custom text-dark
+                        {% elif artigo.nivel == 'ga' %}bg-primary-custom text-dark
+                        {% elif artigo.nivel == 'lo' %}bg-secondary-custom text-dark
+                        {% elif artigo.nivel == 'gal' %}bg-success-custom text-dark
+                        {% elif artigo.nivel == 'ba' %}bg-dark-custom text-dark
+                        {% elif artigo.nivel == 'co' %}bg-light-custom text-dark
+                        {% elif artigo.nivel == 'ca' %}bg-warning-custom text-dark
+                        {% else %}bg-success-custom{% endif %}">
+                        {{ artigo.get_nivel_display }}
+                    </span>
                     </div>
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div>
-                            <small class="text-secondary d-block mb-2">🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
+                           <!-- <small class="text-secondary d-block mb-2">🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>  --> 
                             <h5 class="card-title text-white fw-bold fs-6">{{ artigo.titulo }}</h5>
                             <p class="card-text text-secondary small">{{ artigo.conteudo|truncatechars:100 }}</p>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
                             <span class="small text-white">
-                                <span class="avatar me-1">{{ artigo.id_fk_autor.nome|slice:":2"|upper }}</span> 
-                                {{ artigo.id_fk_autor.nome }}
+                                <span class="avatar me-1">{{ artigo.id_fk_responsavel.nome|slice:":2"|upper }}</span> 
+                                {{ artigo.id_fk_responsavel.nome }}
                             </span>
                             <span class="text-primary-custom small fw-bold">Ler mais →</span>
                         </div>
@@ -67,30 +75,37 @@
                     {% endif %}
                     
                     <!-- Lógica condicional para cor do badge -->
-                    <span class="badge position-absolute top-0 end-0 m-3 
-                        {% if artigo.nivel == 'AVANCADO' %}bg-danger-custom
-                        {% elif artigo.nivel == 'INTERMEDIARIO' %}bg-warning-custom text-dark
+                    <span class="badge position-absolute top-0 end-0 m-3 px-2 py-1
+                        {% if artigo.nivel == 'bo' %}bg-danger-custom
+                        {% elif artigo.nivel == 'ru' %}bg-warning-custom text-dark
+                        {% elif artigo.nivel == 'mi' %}bg-info-custom text-dark
+                        {% elif artigo.nivel == 'ga' %}bg-primary-custom text-dark
+                        {% elif artigo.nivel == 'lo' %}bg-secondary-custom text-dark
+                        {% elif artigo.nivel == 'gal' %}bg-success-custom text-dark
+                        {% elif artigo.nivel == 'ba' %}bg-dark-custom text-dark
+                        {% elif artigo.nivel == 'co' %}bg-light-custom text-dark
+                        {% elif artigo.nivel == 'ca' %}bg-warning-custom text-dark
                         {% else %}bg-success-custom{% endif %}">
                         {{ artigo.get_nivel_display }}
                     </span>
                 </div>
                 <div class="card-body d-flex flex-column justify-content-between">
                     <div>
-                        <small class="text-secondary d-block mb-2">🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
+                       <!-- <small class="text-secondary d-block mb-2">Cliente desde: 🕒 {{ artigo.data_publicacao|date:"d/m/Y" }}</small>--> 
                         <h5 class="card-title text-white fw-bold fs-6">{{ artigo.titulo }}</h5>
                         <!-- Resumo do texto truncado -->
                         <p class="card-text text-secondary small">
                             {{ artigo.conteudo|truncatechars:100 }}
                         </p>
                         <span class="small text-white">
-                             eixo {{  artigo.id_fk_eixo.nome  }}
+                             {{  artigo.id_fk_eixo.nome  }}
                         </span>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-dark-light">
                         <span class="small text-white">
                             <!-- Avatar e Nome dinâmicos -->
-                            <span class="avatar me-1">{{ artigo.id_fk_autor.nome|slice:":2"|upper }}</span> 
-                            {{ artigo.id_fk_autor.nome }}
+                            <span class="avatar me-1">{{ artigo.id_fk_responsavel.nome|slice:":2"|upper }}</span> 
+                            {{ artigo.id_fk_responsavel.nome }}
                         </span>
                         <span class="text-primary-custom small fw-bold">Ler mais →</span>
                     </div>
