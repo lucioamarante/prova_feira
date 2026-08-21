@@ -2,143 +2,297 @@
 {% load static %}
 
 {% block content %}
-<main class="container my-5">
-    <!-- Navegação / Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-secondary text-decoration-none">Início</a></li>
-            <li class="breadcrumb-item text-secondary">{{ artigo.id_fk_eixo.nome }}</li>
-            <li class="breadcrumb-item active text-white" aria-current="page">{{ artigo.titulo }}</li>
-        </ol>
-    </nav>
+<!-- Leaflet & Routing Engine -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 
-    <!-- Header Principal do Box / Banca -->
-    <section class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 p-lg-5 mb-5 shadow-lg">
-        <div class="row g-4 align-items-center">
-            
-            <!-- Imagem Principal / Fachada do Box -->
-            <div class="col-lg-5">
-                <div class="position-relative overflow-hidden rounded-4 shadow">
-                    {% if artigo.foto %}
-                        <img src="{{ artigo.foto.url }}" class="img-fluid w-100 object-fit-cover" alt="{{ artigo.titulo }}" style="min-height: 280px; max-height: 380px;">
-                    {% else %}
-                        <div class="thumb-gradient d-flex align-items-center justify-content-center text-secondary" style="height: 300px;">
-                            <span>Sem imagem de fachada</span>
-                        </div>
-                    {% endif %}
+<style>
+  /* Container do Navegador Waze Indoor */
+  .waze-nav-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle, #1e2640);
+    background-color: #0b0f19;
+  }
 
-                    <!-- Badge do Tipo de Espaço (Box, Rua, Galpão, etc.) -->
-                    <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 fs-6 rounded-pill
-                        {% if artigo.nivel == 'bo' %}bg-danger
-                        {% elif artigo.nivel == 'ru' %}bg-warning text-dark
-                        {% elif artigo.nivel == 'mi' %}bg-info text-dark
-                        {% elif artigo.nivel == 'ga' %}bg-primary
-                        {% elif artigo.nivel == 'lo' %}bg-secondary
-                        {% elif artigo.nivel == 'gal' %}bg-success
-                        {% elif artigo.nivel == 'ba' %}bg-dark border border-light
-                        {% elif artigo.nivel == 'co' %}bg-light text-dark
-                        {% elif artigo.nivel == 'ca' %}bg-warning text-dark
-                        {% else %}bg-success{% endif %}">
-                        📍 {{ artigo.get_nivel_display|title }}
-                    </span>
-                </div>
-            </div>
+  #waze-live-map {
+    height: 380px;
+    width: 100%;
+    z-index: 1;
+  }
 
-            <!-- Dados do Box e Responsável -->
-            <div class="col-lg-7 text-white">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-primary-custom text-dark px-3 py-1 fw-bold rounded-pill">
-                        {{ artigo.id_fk_eixo.nome }}
-                    </span>
-                    <small class="text-secondary">Cadastrado em: {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
-                </div>
+  /* HUD / Painel Flutuante Estilo Waze */
+  .waze-hud-top {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    z-index: 1000;
+    background: rgba(17, 24, 39, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-                <h1 class="fw-bold display-6 mb-3">{{ artigo.titulo }}</h1>
+  .waze-hud-bottom {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    z-index: 1000;
+  }
 
-                <!-- Card Resumo do Vendedor / Responsável -->
-                <div class="d-flex align-items-center gap-3 p-3 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-25 mb-4">
-                    <div class="avatar bg-primary text-dark fw-bold rounded-circle d-flex align-items-center justify-content-center fs-5" style="width: 48px; height: 48px;">
-                        {{ artigo.id_fk_responsavel.nome|slice:":2"|upper }}
-                    </div>
-                    <div>
-                        <div class="fw-bold text-white">{{ artigo.id_fk_responsavel.nome }}</div>
-                        <small class="text-secondary">{{ artigo.id_fk_responsavel.email }}</small>
-                    </div>
-                </div>
+  /* Efeito de Pulso no Ícone do Usuário */
+  .user-live-puck {
+    width: 18px;
+    height: 18px;
+    background-color: #3b82f6;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #3b82f6;
+  }
+</style>
 
-                <!-- Ações Rápidas: Localização & Retorno -->
-                <div class="d-flex flex-wrap gap-2 pt-2">
-                    <!-- Botão Waze / Navegação Feira dos Goianos -->
-                    <a href="https://waze.com/ul?q={{ artigo.titulo|urlencode }}+Feira+dos+Goianos&navigate=yes" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="btn btn-info text-dark fw-bold px-4 py-2 rounded-pill shadow-sm">
-                        🚗 Rota no Waze
-                    </a>
+<main class="container my-4" style="max-width: 900px;">
+    
+    <!-- Voltar -->
+    <div class="mb-3">
+        <a href="{% url 'index' %}" class="text-secondary text-decoration-none small">
+            ← Voltar para o Guia da Feira
+        </a>
+    </div>
 
-                    <!-- Botão Google Maps -->
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ artigo.titulo|urlencode }}+Feira+dos+Goianos" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="btn btn-outline-light px-4 py-2 rounded-pill">
-                        🗺️ Google Maps
-                    </a>
-
-                    <a href="{% url 'index' %}" class="btn btn-dark text-secondary px-3 py-2 rounded-pill ms-auto">
-                        ← Voltar
-                    </a>
-                </div>
-            </div>
+    <!-- Card da Loja -->
+    <article class="card card-merchant p-4 p-md-5 border-0">
+        
+        <!-- Fachada -->
+        <div class="card-img-wrapper rounded-3 mb-4" style="height: 260px;">
+            {% if artigo.foto %}
+                <img src="{{ artigo.foto.url }}" class="card-img-custom" alt="{{ artigo.titulo }}">
+            {% else %}
+                <div class="thumb-gradient w-100 h-100"></div>
+            {% endif %}
+            <span class="badge-category-tag">{{ artigo.get_nivel_display }}</span>
         </div>
-    </section>
 
-    <!-- Descrição Completa / Catálogo / Conteúdo TinyMCE -->
-    <section class="row">
-        <div class="col-lg-8">
-            <div class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 p-lg-5 text-light shadow">
-                <h4 class="text-white fw-bold mb-4 border-bottom border-secondary border-opacity-25 pb-3">
-                    Sobre a Banca & Produtos
-                </h4>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="badge-eixo">{{ artigo.id_fk_eixo.nome }}</span>
+            <span class="badge-status-open">● Box Aberto</span>
+        </div>
+
+        <h1 class="text-white fw-bold fs-2 mb-2">{{ artigo.titulo }}</h1>
+        <p class="text-secondary small mb-4">
+            📍 Feira do P Sul — Responsável: <strong>{{ artigo.id_fk_responsavel.nome }}</strong>
+        </p>
+
+        <!-- Botões de Contato Imediato -->
+        <div class="d-flex flex-wrap gap-2 mb-4 pb-4 border-bottom border-dark-light">
+            <a href="https://wa.me/5561999999999?text=Ol%C3%A1,%20estou%20aqui%20na%20feira%20e%20vi%20o%20box%20{{ artigo.titulo|urlencode }}" 
+               target="_blank" 
+               class="btn-whatsapp-action flex-grow-1 justify-content-center py-2">
+                <i class="fa-brands fa-whatsapp fs-5 me-2"></i>
+                <span>Chamar no WhatsApp</span>
+            </a>
+
+            <a href="https://instagram.com" 
+               target="_blank" 
+               class="btn btn-outline-light rounded-2 d-flex align-items-center justify-content-center px-4 py-2">
+                <i class="fa-brands fa-instagram fs-5 me-2 text-danger"></i>
+                <span>Instagram</span>
+            </a>
+        </div>
+
+        <!-- MÓDULO WAZE INDOOR: Navegador Pedestre da Feira -->
+        <div class="mb-5 pb-4 border-bottom border-dark-light">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="text-white fw-bold fs-5 m-0">🧭 Navegador Interno da Feira</h5>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" style="font-size: 0.7rem;">Modo Pedestre</span>
+                </div>
+            </div>
+
+            <div class="waze-nav-wrapper shadow-lg">
                 
-                <!-- Renderiza o HTML do TinyMCE de forma segura -->
-                <div class="conteudo-editor lh-lg">
-                    {{ artigo.texto|safe }}
+                <!-- HUD Superior (Exibe status em tempo real) -->
+                <div class="waze-hud-top" id="hudStatus">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-person-walking text-primary-custom fs-5"></i>
+                        <div>
+                            <span class="text-white fw-bold d-block lh-1" id="hudDistanceText">Destino: {{ artigo.titulo }}</span>
+                            <span class="text-secondary" style="font-size: 0.72rem;">Toque em Iniciar para guiar seus passos</span>
+                        </div>
+                    </div>
+                    <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1" id="gpsIndicator">
+                        GPS Pronto
+                    </span>
                 </div>
+
+                <!-- Mapa Interativo -->
+                <div id="waze-live-map"></div>
+
+                <!-- HUD Inferior: Botão de Iniciar Rota -->
+                <div class="waze-hud-bottom d-flex gap-2">
+                    <button type="button" id="btnStartNavigation" class="btn btn-primary fw-bold w-100 py-3 rounded-3 shadow d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa-solid fa-location-arrow"></i>
+                        <span>Iniciar Trajeto até a Porta do Box</span>
+                    </button>
+                    <button type="button" id="btnStopNavigation" class="btn btn-dark border-dark-light text-secondary d-none px-3 rounded-3" title="Encerrar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
             </div>
         </div>
 
-        <!-- Barra Lateral: Informações do Responsável -->
-        <aside class="col-lg-4 mt-4 mt-lg-0">
-            <div class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 text-white shadow">
-                <h5 class="fw-bold mb-3">Atendimento e Contato</h5>
-                <p class="text-secondary small mb-3">
-                    Entre em contato com o responsável direto pelo box para dúvidas, encomendas ou catálogo completo.
-                </p>
-
-                <ul class="list-unstyled d-flex flex-column gap-2 mb-4">
-                    <li class="d-flex align-items-center gap-2">
-                        <span class="text-primary-custom">👤</span> 
-                        <span>{{ artigo.id_fk_responsavel.nome }}</span>
-                    </li>
-                    <li class="d-flex align-items-center gap-2">
-                        <span class="text-primary-custom">✉️</span> 
-                        <a href="mailto:{{ artigo.id_fk_responsavel.email }}" class="text-decoration-none text-light text-truncate">
-                            {{ artigo.id_fk_responsavel.email }}
-                        </a>
-                    </li>
-                    <li class="d-flex align-items-center gap-2">
-                        <span class="text-primary-custom">🏢</span> 
-                        <span>Espaço: <strong>{{ artigo.get_nivel_display|title }}</strong></span>
-                    </li>
-                </ul>
-
-                {% if artigo.id_fk_responsavel.biografia %}
-                    <hr class="border-secondary border-opacity-25">
-                    <h6 class="fw-bold text-white small">Sobre o Vendedor:</h6>
-                    <p class="text-secondary small mb-0">{{ artigo.id_fk_responsavel.biografia }}</p>
-                {% endif %}
+        <!-- Produtos e Descrição da Loja -->
+        <div>
+            <h5 class="text-white fw-bold fs-5 mb-3">Sobre o Box & Produtos</h5>
+            <div class="article-reader">
+                {{ artigo.texto|safe }}
             </div>
-        </aside>
-    </section>
+        </div>
+
+    </article>
 </main>
+
+<!-- Scripts do Leaflet e Motor de Navegação Pedestre -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+<script>
+    // 1. Coordenadas Fixas do Box dentro da Feira (Exemplo: Feira do P Sul)
+    const latDestino = -15.82672;
+    const lngDestino = -48.11895;
+
+    // 2. Inicialização do Mapa
+    const map = L.map('waze-live-map', {
+        zoomControl: false,
+        attributionControl: false
+    }).setView([latDestino, lngDestino], 18); // Zoom fechado no quarteirão
+
+    // Camada Dark CartoDB
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 20,
+        subdomains: 'abcd'
+    }).addTo(map);
+
+    // 3. Marcador da Loja
+    const storeIcon = L.divIcon({
+        className: 'custom-store-pin',
+        html: '<div style="background:#ef4444; color:white; padding:6px 10px; border-radius:20px; font-weight:bold; font-size:11px; border:2px solid white; box-shadow:0 0 10px rgba(0,0,0,0.5); white-space:nowrap;">🏪 {{ artigo.titulo }}</div>',
+        iconSize: [100, 30],
+        iconAnchor: [50, 15]
+    });
+    L.marker([latDestino, lngDestino], { icon: storeIcon }).addTo(map);
+
+    // 4. Variáveis de Navegação em Tempo Real
+    let userMarker = null;
+    let routingControl = null;
+    let watchId = null;
+
+    const btnStart = document.getElementById('btnStartNavigation');
+    const btnStop = document.getElementById('btnStopNavigation');
+    const hudDistanceText = document.getElementById('hudDistanceText');
+    const gpsIndicator = document.getElementById('gpsIndicator');
+
+    // 5. Iniciar Modo Waze Pedestre
+    btnStart.addEventListener('click', function() {
+        if (!navigator.geolocation) {
+            alert('Seu navegador não suporta geolocalização.');
+            return;
+        }
+
+        btnStart.classList.add('d-none');
+        btnStop.classList.remove('d-none');
+        gpsIndicator.textContent = "Navegando...";
+        gpsIndicator.className = "badge bg-primary text-white";
+
+        // Rastreamento contínuo dos passos do usuário
+        watchId = navigator.geolocation.watchPosition(
+            function(pos) {
+                const userLat = pos.coords.latitude;
+                const userLng = pos.coords.longitude;
+                const userLatLng = [userLat, userLng];
+
+                // Atualiza ou cria o marcador do usuário
+                if (!userMarker) {
+                    const userIcon = L.divIcon({
+                        className: 'user-puck-container',
+                        html: '<div class="user-live-puck"></div>',
+                        iconSize: [18, 18],
+                        iconAnchor: [9, 9]
+                    });
+                    userMarker = L.marker(userLatLng, { icon: userIcon }).addTo(map);
+                } else {
+                    userMarker.setLatLng(userLatLng);
+                }
+
+                // Desenha e recalcula a rota contínua
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                }
+
+                routingControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLng),
+                        L.latLng(latDestino, lngDestino)
+                    ],
+                    router: L.Routing.osrmv1({
+                        profile: 'foot' // Rota prioritária para pedestres e caminhada
+                    }),
+                    lineOptions: {
+                        styles: [{ color: '#3b82f6', opacity: 0.9, weight: 6 }]
+                    },
+                    createMarker: () => null, // Não duplica ícones
+                    show: false // Oculta painel de instruções de texto
+                }).on('routesfound', function(e) {
+                    const routes = e.routes;
+                    const summary = routes[0].summary;
+                    const distanciaMetros = Math.round(summary.totalDistance);
+                    const tempoMinutos = Math.ceil(summary.totalTime / 60);
+
+                    hudDistanceText.innerHTML = `🚶‍♂️ <strong>${distanciaMetros} metros</strong> (${tempoMinutos} min a pé)`;
+                }).addTo(map);
+
+                // Centraliza a visão na posição do usuário
+                map.setView(userLatLng, 19);
+            },
+            function(err) {
+                alert('Ative a precisão do GPS do seu celular para navegar na feira.');
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 1000
+            }
+        );
+    });
+
+    // 6. Encerrar Navegação
+    btnStop.addEventListener('click', function() {
+        if (watchId) {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+        }
+        if (routingControl) {
+            map.removeControl(routingControl);
+            routingControl = null;
+        }
+        if (userMarker) {
+            map.removeLayer(userMarker);
+            userMarker = null;
+        }
+
+        btnStop.classList.add('d-none');
+        btnStart.classList.remove('d-none');
+        hudDistanceText.textContent = "Destino: {{ artigo.titulo }}";
+        gpsIndicator.textContent = "Pausado";
+        gpsIndicator.className = "badge bg-secondary text-white";
+        map.setView([latDestino, lngDestino], 18);
+    });
+</script>
 {% endblock %}

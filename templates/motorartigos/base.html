@@ -1,25 +1,37 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevBlog Django</title>
+    <title>{% block title %}boxfacil.com— Guia Comercial e Serviços de Feiras do DF{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome (Ícones do WhatsApp e Redes Sociais) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-dark-custom text-white d-flex flex-column min-vh-100">
 
+    <!-- Topo, Busca e Filtros Dinâmicos -->
     {% include 'motorartigos/partials/_header.html' %}
 
-    <main class="main-content container">
+    <!-- Grid de Cards Injetado pelo index.html -->
+    <main class="main-content container flex-grow-1">
         {% block content %}
         {% endblock %}
     </main>
 
+    <!-- Rodapé -->
     {% include 'motorartigos/partials/_footer.html' %}
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

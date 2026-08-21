@@ -29,7 +29,7 @@ class EixoTecnologia(models.Model):
         verbose_name_plural = 'Eixos de Tecnologia'
 
 
-class Artigo(models.Model):
+class Comercio(models.Model):
 
     titulo = models.CharField(        
         max_length=200,
@@ -80,9 +80,9 @@ class Artigo(models.Model):
         return f"Artigo {self.id} – {self.id_fk_responsavel.nome}"  # 👈 mais legível
 
     class Meta:
-        db_table = 'artigo'
-        verbose_name = 'Artigo'
-        verbose_name_plural = 'Artigos'
+        db_table = 'comercio'
+        verbose_name = 'Comercio'
+        verbose_name_plural = 'Comercios'
         ordering = ['-data_publicacao']  
     # Adicione este método dentro da classe Artigo no seu models.py:
     def get_absolute_url(self):
