@@ -1,0 +1,144 @@
+{% extends 'motorartigos/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="container my-5">
+    <!-- Navegação / Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-secondary text-decoration-none">Início</a></li>
+            <li class="breadcrumb-item text-secondary">{{ artigo.id_fk_eixo.nome }}</li>
+            <li class="breadcrumb-item active text-white" aria-current="page">{{ artigo.titulo }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header Principal do Box / Banca -->
+    <section class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 p-lg-5 mb-5 shadow-lg">
+        <div class="row g-4 align-items-center">
+            
+            <!-- Imagem Principal / Fachada do Box -->
+            <div class="col-lg-5">
+                <div class="position-relative overflow-hidden rounded-4 shadow">
+                    {% if artigo.foto %}
+                        <img src="{{ artigo.foto.url }}" class="img-fluid w-100 object-fit-cover" alt="{{ artigo.titulo }}" style="min-height: 280px; max-height: 380px;">
+                    {% else %}
+                        <div class="thumb-gradient d-flex align-items-center justify-content-center text-secondary" style="height: 300px;">
+                            <span>Sem imagem de fachada</span>
+                        </div>
+                    {% endif %}
+
+                    <!-- Badge do Tipo de Espaço (Box, Rua, Galpão, etc.) -->
+                    <span class="badge position-absolute top-0 end-0 m-3 px-3 py-2 fs-6 rounded-pill
+                        {% if artigo.nivel == 'bo' %}bg-danger
+                        {% elif artigo.nivel == 'ru' %}bg-warning text-dark
+                        {% elif artigo.nivel == 'mi' %}bg-info text-dark
+                        {% elif artigo.nivel == 'ga' %}bg-primary
+                        {% elif artigo.nivel == 'lo' %}bg-secondary
+                        {% elif artigo.nivel == 'gal' %}bg-success
+                        {% elif artigo.nivel == 'ba' %}bg-dark border border-light
+                        {% elif artigo.nivel == 'co' %}bg-light text-dark
+                        {% elif artigo.nivel == 'ca' %}bg-warning text-dark
+                        {% else %}bg-success{% endif %}">
+                        📍 {{ artigo.get_nivel_display|title }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dados do Box e Responsável -->
+            <div class="col-lg-7 text-white">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-primary-custom text-dark px-3 py-1 fw-bold rounded-pill">
+                        {{ artigo.id_fk_eixo.nome }}
+                    </span>
+                    <small class="text-secondary">Cadastrado em: {{ artigo.data_publicacao|date:"d/m/Y" }}</small>
+                </div>
+
+                <h1 class="fw-bold display-6 mb-3">{{ artigo.titulo }}</h1>
+
+                <!-- Card Resumo do Vendedor / Responsável -->
+                <div class="d-flex align-items-center gap-3 p-3 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-25 mb-4">
+                    <div class="avatar bg-primary text-dark fw-bold rounded-circle d-flex align-items-center justify-content-center fs-5" style="width: 48px; height: 48px;">
+                        {{ artigo.id_fk_responsavel.nome|slice:":2"|upper }}
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white">{{ artigo.id_fk_responsavel.nome }}</div>
+                        <small class="text-secondary">{{ artigo.id_fk_responsavel.email }}</small>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas: Localização & Retorno -->
+                <div class="d-flex flex-wrap gap-2 pt-2">
+                    <!-- Botão Waze / Navegação Feira dos Goianos -->
+                    <a href="https://waze.com/ul?q={{ artigo.titulo|urlencode }}+Feira+dos+Goianos&navigate=yes" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="btn btn-info text-dark fw-bold px-4 py-2 rounded-pill shadow-sm">
+                        🚗 Rota no Waze
+                    </a>
+
+                    <!-- Botão Google Maps -->
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ artigo.titulo|urlencode }}+Feira+dos+Goianos" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        🗺️ Google Maps
+                    </a>
+
+                    <a href="{% url 'index' %}" class="btn btn-dark text-secondary px-3 py-2 rounded-pill ms-auto">
+                        ← Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Descrição Completa / Catálogo / Conteúdo TinyMCE -->
+    <section class="row">
+        <div class="col-lg-8">
+            <div class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 p-lg-5 text-light shadow">
+                <h4 class="text-white fw-bold mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+                    Sobre a Banca & Produtos
+                </h4>
+                
+                <!-- Renderiza o HTML do TinyMCE de forma segura -->
+                <div class="conteudo-editor lh-lg">
+                    {{ artigo.texto|safe }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra Lateral: Informações do Responsável -->
+        <aside class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card bg-dark border border-secondary border-opacity-25 rounded-4 p-4 text-white shadow">
+                <h5 class="fw-bold mb-3">Atendimento e Contato</h5>
+                <p class="text-secondary small mb-3">
+                    Entre em contato com o responsável direto pelo box para dúvidas, encomendas ou catálogo completo.
+                </p>
+
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-4">
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-primary-custom">👤</span> 
+                        <span>{{ artigo.id_fk_responsavel.nome }}</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-primary-custom">✉️</span> 
+                        <a href="mailto:{{ artigo.id_fk_responsavel.email }}" class="text-decoration-none text-light text-truncate">
+                            {{ artigo.id_fk_responsavel.email }}
+                        </a>
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-primary-custom">🏢</span> 
+                        <span>Espaço: <strong>{{ artigo.get_nivel_display|title }}</strong></span>
+                    </li>
+                </ul>
+
+                {% if artigo.id_fk_responsavel.biografia %}
+                    <hr class="border-secondary border-opacity-25">
+                    <h6 class="fw-bold text-white small">Sobre o Vendedor:</h6>
+                    <p class="text-secondary small mb-0">{{ artigo.id_fk_responsavel.biografia }}</p>
+                {% endif %}
+            </div>
+        </aside>
+    </section>
+</main>
+{% endblock %}

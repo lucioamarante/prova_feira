@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 #from django.http import HttpResponse
 from motorartigos.models import Responsavel,Artigo,EixoTecnologia
 from django.db.models import Q # Importante para buscas complexas
@@ -43,5 +43,10 @@ def index(request):
 def artigo(request):
     return render(request,'motorartigos/artigo.html')
 
-def artigo(request):
-    return render(request,'motorartigos/artigo.html')
+def detalhe_artigo(request, id):
+    artigo = get_object_or_404(
+        Artigo.objects.select_related('id_fk_eixo', 'id_fk_responsavel'),
+        id=id,
+        publicada=True
+    )
+    return render(request, 'motorartigos/banca.html', {'artigo': artigo})
