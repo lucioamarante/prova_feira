@@ -50,3 +50,5 @@ def detalhe_comercio(request, id):
         publicada=True
     )
     return render(request, 'motorartigos/banca.html', {'artigo': comercio})
+def mostrar_dashboard(request):
+    return render(request, 'motorartigos/dashboard.html')

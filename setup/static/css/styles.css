@@ -1,165 +1,77 @@
 /* ==========================================================================
-   1. DESIGN TOKENS (VARIÁVEIS DO SISTEMA)
+   1. VARIÁVEIS DE COR E TEMA ESCURO
    ========================================================================== */
 :root {
-  /* Fundo & Superfícies */
-  --bg-app: #0b0f19;
-  --bg-surface: #111827;
-  --bg-card: #111c30;
-  --bg-card-hover: #16233b;
-  --border-subtle: #1e2640;
+  --bg-app: #080d1a;
+  --bg-card: #0e1726;
+  --bg-card-hover: #131f33;
+  --border-card: #1e293b;
   --border-focus: #3b82f6;
 
-  /* Tipografia & Cores de Texto */
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
-  --text-muted: #64748b;
-  --text-reader: #b0b7c6;
-
-  /* Cores de Ação & Status */
-  --brand-primary: #3b82f6;
-  --brand-primary-hover: #2563eb;
-  --brand-whatsapp: #10b981;
-  --brand-whatsapp-hover: #059669;
-  --brand-cyan: #00bcd4;
-
-  --color-danger: #ef4444;
-  --color-warning: #f59e0b;
-  --color-indigo: #6366f1;
-
-  /* Raios e Transições */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-pill: 9999px;
-  --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --text-white: #ffffff;
+  --text-gray: #94a3b8;
+  --accent-blue: #38bdf8;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
 }
 
-/* ==========================================================================
-   2. CONFIGURAÇÕES GERAIS E RESET
-   ========================================================================== */
 body {
   background-color: var(--bg-app);
-  color: var(--text-primary);
+  color: var(--text-white);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 
-.bg-dark-custom { background-color: var(--bg-app) !important; }
-.tracking-tight { letter-spacing: -0.025em; }
-.border-dark-light { border-color: var(--border-subtle) !important; }
-.text-primary-custom { color: #60a5fa !important; }
-
-/* Badge de Status Topo */
-.badge-status {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.75rem;
+/* ==========================================================================
+   2. TÍTULOS E GRIDS
+   ========================================================================== */
+.section-title {
+  color: var(--text-white);
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
-/* ==========================================================================
-   3. BUSCA & FILTROS DE CATEGORIA (ESTILO MOBBIN / PILLS)
-   ========================================================================== */
-.search-bar-container {
-  position: relative;
-  display: flex;
-  align-items: center;
+.grid-boxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
   width: 100%;
 }
 
-.search-box {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  border-radius: var(--radius-md);
-  padding: 14px 50px 14px 18px;
-  font-size: 0.95rem;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-  transition: var(--transition-smooth);
-}
-
-.search-box:focus {
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-}
-
-.btn-search-submit {
-  position: absolute;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 4px 8px;
-}
-
-.filters-wrapper {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 10px 0;
-  scrollbar-width: none;
-}
-.filters-wrapper::-webkit-scrollbar { display: none; }
-
-.btn-filter {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: var(--radius-pill);
-  padding: 8px 18px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.btn-filter:hover {
-  background-color: #1f2937;
-  color: var(--text-primary);
-  border-color: var(--text-muted);
-}
-
-.btn-filter.active {
-  background-color: var(--brand-primary);
-  border-color: var(--brand-primary);
-  color: #ffffff;
-}
-
 /* ==========================================================================
-   4. CARDS DE ESTABELECIMENTOS (COMERCIAIS)
+   3. ESTRUTURA DO CARD
    ========================================================================== */
-.card-merchant {
-  background-color: var(--bg-card) !important;
-  border: 1px solid var(--border-subtle) !important;
-  border-radius: var(--radius-md);
+.box-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: var(--transition-smooth);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card-merchant:hover {
+.box-card:hover {
   transform: translateY(-4px);
-  background-color: var(--bg-card-hover) !important;
-  border-color: var(--border-focus) !important;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  border-color: var(--border-focus);
+  background-color: var(--bg-card-hover);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Container de Imagem / Logo */
-.card-img-wrapper {
+/* Banner de Imagem */
+.box-img-wrapper {
   position: relative;
-  height: 160px;
   width: 100%;
-  background-color: #0f172a;
+  height: 160px;
+  background-color: #ffffff;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.card-img-custom {
+.box-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -168,233 +80,98 @@ body {
 }
 
 .thumb-gradient {
-  height: 100%;
   background: linear-gradient(135deg, #1e293b, #334155);
 }
 
-/* Badges e Tags */
-.badge-category-tag {
+/* Badges e Pílulas */
+.box-tag {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(11, 15, 25, 0.85);
+  background-color: rgba(15, 23, 42, 0.88);
   color: #e2e8f0;
   border: 1px solid rgba(255, 255, 255, 0.15);
   font-size: 0.7rem;
+  font-weight: 600;
   padding: 4px 8px;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   backdrop-filter: blur(4px);
-  font-weight: 600;
 }
 
-.badge-featured-tag {
+.badge-featured {
   background-color: rgba(245, 158, 11, 0.15);
-  color: var(--color-warning);
+  color: var(--accent-orange);
   border: 1px solid rgba(245, 158, 11, 0.3);
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-}
-
-.badge-eixo {
-  color: #60a5fa;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.badge-status-open {
-  color: #10b981;
   font-size: 0.72rem;
   font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 9999px;
 }
 
-/* Textos do Card */
-.card-body {
+/* Conteúdo Textual */
+.box-content {
   padding: 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.merchant-title {
+.box-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.box-category {
+  color: var(--accent-blue);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.box-status {
+  color: var(--accent-green);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.box-title {
+  color: var(--text-white);
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.3;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.merchant-location {
+.box-location {
+  color: var(--text-gray);
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  margin: 0 0 16px 0;
 }
 
-.merchant-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-/* Botão de Contato Direto (Conversão WhatsApp) */
-.btn-whatsapp-action {
+/* Botão WhatsApp */
+.box-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(16, 185, 129, 0.12);
+  background-color: rgba(16, 185, 129, 0.1);
   color: #34d399;
   border: 1px solid rgba(16, 185, 129, 0.25);
   text-decoration: none;
   font-size: 0.82rem;
   font-weight: 600;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  transition: var(--transition-smooth);
+  padding: 9px 14px;
+  border-radius: 8px;
+  margin-top: auto;
+  transition: all 0.2s ease;
 }
 
-.btn-whatsapp-action:hover {
-  background-color: var(--brand-whatsapp);
+.box-btn:hover {
+  background-color: var(--accent-green);
   color: #ffffff;
-  border-color: var(--brand-whatsapp);
-}
-
-/* ==========================================================================
-   5. PÁGINA DE LEITURA & ARTIGOS (COMPATIBILIDADE DE TEXTO)
-   ========================================================================== */
-.article-reader {
-  color: var(--text-reader) !important;
-  line-height: 1.8;
-}
-
-.article-reader h2, .article-reader h3 {
-  color: var(--text-primary) !important;
-  font-weight: 700;
-  margin-top: 1.5rem;
-}
-
-.article-reader a {
-  color: var(--brand-cyan);
-  text-decoration: underline;
-}
-
-.article-reader blockquote {
-  border-left: 4px solid var(--brand-cyan);
-  background-color: var(--bg-surface);
-  padding: 1rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
-/* ==========================================================================
-   6. FOOTER E ÍCONES SOCIAIS
-   ========================================================================== */
-.footer {
-  background-color: var(--bg-app) !important;
-}
-
-.quote-text {
-  font-size: 0.78rem;
-  font-style: italic;
-  opacity: 0.85;
-}
-
-.social-container .social-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-secondary) !important;
-  text-decoration: none;
-  transition: var(--transition-smooth);
-}
-
-.social-container .social-link:hover {
-  color: #ffffff !important;
-  background-color: rgba(59, 130, 246, 0.15);
-  border-color: var(--brand-primary);
-  transform: translateY(-2px);
-}
-
-.btn-app-download {
-    display: inline-flex;
-    align-items: center;
-    background-color: #111827;
-    border: 1px solid #1e2640;
-    padding: 8px 18px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-app-download:hover {
-    background-color: #16233b;
-    border-color: #3b82f6;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}
-
-
-/* ==========================================================================
-   BARRA SUPERIOR COMPACTA E ALINHADA
-   ========================================================================== */
-.header-navbar {
-    background-color: var(--bg-app, #0b0f19);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/* Campo de Busca Integrado */
-.search-container {
-    max-width: 650px;
-}
-
-.search-input {
-    background-color: #111827;
-    border: 1px solid #1e2640;
-    color: #ffffff;
-    border-radius: 9999px; /* Formato Pílula Moderno */
-    padding: 10px 20px 10px 42px;
-    font-size: 0.9rem;
-    width: 100%;
-    outline: none;
-    transition: all 0.2s ease-in-out;
-}
-
-.search-input:focus {
-    border-color: #3b82f6;
-    background-color: #162033;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.search-icon {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-    font-size: 0.85rem;
-    pointer-events: none;
-}
-
-/* Badges Oficiais de App (Android / Apple) */
-.btn-store-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #111827;
-    border: 1px solid #1e2640;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.btn-store-badge:hover {
-    background-color: #16233b;
-    border-color: #3b82f6;
-    transform: translateY(-1px);
+  border-color: var(--accent-green);
 }
