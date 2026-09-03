@@ -27,7 +27,21 @@ def update_server(request):
     
     return HttpResponseForbidden('Método não permitido')
 
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    # Processa o payload
+    return "OK", 200
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+@csrf_exempt
+def github_webhook(request):
+    if request.method == 'POST':
+        # Processa o payload
+        return HttpResponse("OK", status=200)
+    return HttpResponse("Método não permitido", status=405)
+   
 def index(request):
     comercios_base = Comercio.objects.filter(publicada=True)
     
