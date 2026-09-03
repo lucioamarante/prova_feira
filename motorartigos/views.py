@@ -3,6 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from motorartigos.models import Responsavel,Comercio,EixoTecnologia
 from django.db.models import Q # Importante para buscas complexas
 
+import os
+import subprocess
+from django.http import HttpResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     comercios_base = Comercio.objects.filter(publicada=True)
@@ -39,7 +43,12 @@ def index(request):
         'termo_busca': termo_busca                 
     }
     return render(request, 'motorartigos/index.html', contexto)
-
+@csrf_exempt
+def update_server(request):
+ if request.method == 'POST':
+ # Altere para o caminho absoluto do seu projeto no PythonAnywhere
+ project_dir = '/home/seu_usuario/seu_repositorio'
+ 
 def artigo(request):
     return render(request,'motorartigos/artigo.html')
 
