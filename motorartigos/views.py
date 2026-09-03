@@ -45,10 +45,10 @@ def index(request):
     return render(request, 'motorartigos/index.html', contexto)
 @csrf_exempt
 def update_server(request):
- if request.method == 'POST':
+    if request.method == 'POST':
  # Altere para o caminho absoluto do seu projeto no PythonAnywhere
- project_dir = '/home/seu_usuario/seu_repositorio'
- 
+        project_dir = '/home/luciosk/prova_feira/'
+
 def artigo(request):
     return render(request,'motorartigos/artigo.html')
 
