@@ -9,16 +9,26 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def github_webhook(request):
+def update_server(request):
     if request.method == 'POST':
-        # Processa o payload
-        return HttpResponse("OK", status=200)
-    return HttpResponse("Método não permitido", status=405)
+        # 1. Caminho absoluto da pasta do seu repositório no PythonAnywhere
+        # Exemplo: '/home/romulogato/prova' (baseado no caminho do seu terminal)
+        project_dir = '/home/luciosk/prova_feira'
+        
+        # 2. Executa o git pull no repositório
+        subprocess.run(['git', '-C', project_dir, 'pull'], check=True)
+        
+        # 3. Caminho do arquivo WSGI para forçar o reload da aplicação no PythonAnywhere
+        # Substiua 'romulogato' se o nome de usuário da conta do PythonAnywhere for outro
+        wsgi_file = '/var/www/luciosk_pythonanywhere_com_wsgi.py'
+        subprocess.run(['touch', wsgi_file], check=True)
+        
+        return HttpResponse('Servidor atualizado com sucesso!', status=200)
+    
+    return HttpResponseForbidden('Método não permitido')
 
 
-def webhook():
-    # Processa o payload
-    return "OK", 200
+
 
 def index(request):
     comercios_base = Comercio.objects.filter(publicada=True)
@@ -55,12 +65,6 @@ def index(request):
         'termo_busca': termo_busca
     }
     return render(request, 'motorartigos/index.html', contexto)
-@csrf_exempt
-def update_server(request):
-    if request.method == 'POST':
- # Altere para o caminho absoluto do seu projeto no PythonAnywhere
-        project_dir = '/home/luciosk/prova_feira'
-
 def artigo(request):
     return render(request,'motorartigos/artigo.html')
 
