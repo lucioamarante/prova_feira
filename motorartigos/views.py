@@ -59,7 +59,7 @@ def index(request):
 def update_server(request):
     if request.method == 'POST':
  # Altere para o caminho absoluto do seu projeto no PythonAnywhere
-        project_dir = '/home/luciosk/https://github.com/lucioamarante/prova_feira.git'
+        project_dir = '/home/luciosk/prova_feira'
 
 def artigo(request):
     return render(request,'motorartigos/artigo.html')
